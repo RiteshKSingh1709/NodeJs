@@ -19,16 +19,21 @@ var createServer = http.createServer(function(req,res){
 	var path = parsedUrl.pathname;
 	//replace the slashe with no space
 	var trimmedUrl = path.replace(/^\/+|\/+$/g,'');
-
+	//get the queryString in the requested path
+	var queryStringObject = parsedUrl.query;
+	console.log(queryStringObject);
 	//get the methd which that request came to the server
 	var method = req.method.toLowerCase();
+	//get the header as object
+	var header = req.headers;
 
 
 	//send the response
 	res.end("Hello World\n");
 
-	//log the requested path with method name
-	console.log("The request path : "+trimmedUrl+" and the method name is : "+method);
+	//log the requested path with method name and query String (if any)
+	console.log("The request path : "+trimmedUrl+ " and the method name is : "+method+"with query string : ",queryStringObject);
+	console.log("The request header is :",header);
 });
 
 //listen the port 
