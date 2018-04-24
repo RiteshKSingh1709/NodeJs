@@ -12,6 +12,43 @@ var fs = require('fs');
 //import config file
 var config = require('./config');
 console.log(config);
+var _data = require('./lib/data');
+
+// create the HTTP Server
+var httpServer = http.createServer(function(req,res){
+ 	unifiedServer(req,res);
+});
+
+
+//Testing purporse
+// @TODO delete this 
+var DEBUG=true;
+
+//Testing the create function
+if(!DEBUG){
+	_data.create('test','newfile','json',function(err){
+		console.log("The error is : "+ err);
+	});
+}
+//Testing the read function
+if(DEBUG)
+{
+	_data.read('test','newfile',function(err,data){
+		if(!err) {
+			console.log(data);
+		} else {
+			console.log("The error is : "+err);	
+		}
+		
+	});
+}
+
+//Testing the update function
+if(!DEBUG){
+	_data.update('test','newfile',{'foo':'koo'},function(err){
+		console.log("The error is : "+err);
+	});
+}
 
 // create the HTTP Server
 var httpServer = http.createServer(function(req,res){
@@ -120,6 +157,12 @@ handler.sample = function(data,callback){
 	callback(200,{'name':'sample handler'});
 };
 
+//Ping handler
+handler.ping=function(data,callback)
+{
+	callback(200);
+};
+
 handler.NotFound = function(data,callback)
 {
 	callback(404);
@@ -128,3 +171,4 @@ handler.NotFound = function(data,callback)
 //setting up the router
 var router = {};
 router.sample = handler.sample;
+router.ping = handler.ping
