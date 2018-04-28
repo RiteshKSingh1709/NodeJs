@@ -10,9 +10,11 @@ var StringDecoder = require('string_decoder').StringDecoder;
 var https = require('https');
 var fs = require('fs');
 //import config file
-var config = require('./config');
+var config = require('./lib/config');
 console.log(config);
 var _data = require('./lib/data');
+var handlers = require('./lib/handlers');
+var helpers = require('./lib/helpers');
 
 // create the HTTP Server
 var httpServer = http.createServer(function(req,res){
@@ -26,14 +28,14 @@ var DEBUG=true;
 
 //Testing the create function
 if(!DEBUG){
-	_data.create('test','newfile','json',function(err){
-		console.log("The error is : "+ err);
+	_data.create('test','newfile',{'foo':'bar'},'json',function(err){
+		console.log("The error is : "+ err)
 	});
 }
 //Testing the read function
 if(DEBUG)
 {
-	_data.read('test','newfile',function(err,data){
+	_data.read('test','newfile',function(err,data){	
 		if(!err) {
 			console.log(data);
 		} else {
@@ -109,16 +111,21 @@ var unifiedServer = function(req,res){
 		buffer += decoder.end();
 
 		//choose the handler this request should go
-		var choosenHandler = typeof(router[trimmedUrl]) !== 'undefined' ? router[trimmedUrl] : handler.NotFound;
-
+		var choosenHandler = typeof(router[trimmedUrl]) !== 'undefined' ? router[trimmedUrl] : handlers.NotFound;
+		console.log("The handler is :"+choosenHandler);
 		//condtruct the data object that send to handler
 		var data = {
 			'trimmedPath' : trimmedUrl,
 			'queryStringObject' : queryStringObject,
 			'method' : method,
 			'headers' : header,
-			'payload' : buffer,
+			'payload' : helpers.parseJsonToObject(buffer),
 		}
+		console.log("The data is :"+data.payload.firstName + "The typeof : " + typeof(data.payload.firstName));
+		// for(let Obj in data.payload){
+		// 	console.log("coming here");
+		// 	console.log(Obj + " : " + data.payload[Obj] + "typeof(object) : " + typeof(data.payload[Obj]));
+		// }
 
 		choosenHandler(data,function(statusCode,payload){
 			//use the status code called by handler or deault
@@ -149,26 +156,9 @@ var unifiedServer = function(req,res){
 
 };
 
-//Define the handler
-var handler = {};
-
-//sample handler
-handler.sample = function(data,callback){
-	callback(200,{'name':'sample handler'});
-};
-
-//Ping handler
-handler.ping=function(data,callback)
-{
-	callback(200);
-};
-
-handler.NotFound = function(data,callback)
-{
-	callback(404);
-};
 
 //setting up the router
 var router = {};
-router.sample = handler.sample;
-router.ping = handler.ping
+router.sample = handlers.sample;
+router.ping = handlers.ping;
+router.users = handlers.users;
