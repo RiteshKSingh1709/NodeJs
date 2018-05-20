@@ -9,16 +9,14 @@ var envrionments = {};
 envrionments.staging = {
 	'httpPort' : 3000,
 	'httpsPort' : 3001,
-	'envName' : 'staging',
-	'hashingSecret' : 'thisIsSecret'
+	'envName' : 'staging'
 };
 
 //envrionment specific to production
 envrionments.production = {
 	'httpPort' : 5000,
 	'httpsPort' : 5001,
-	'envName' : 'production',
-	'hashingSecret' : 'thisIsAlsoSecret'
+	'envName' : 'production'
 };
 
 //get the current envrionment using command line argument

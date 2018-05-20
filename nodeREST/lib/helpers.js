@@ -22,7 +22,6 @@ helpers.hash = function(str) {
 
 //Parse a JSON string to object in all cases
 helpers.parseJsonToObject = function(str){
-	console.log("coming here");
 	try{
 		console.log("coming here"+str);
 		var obj = JSON.parse(str);
@@ -30,6 +29,29 @@ helpers.parseJsonToObject = function(str){
 	} catch(e){
 		console.log("coming here.." +e);
 		return {};
+	}
+};
+
+//Create a random string of specified string length
+helpers.createRandomString = function(strLength){
+	var strLength = typeof(strLength) == 'number' && strLength > 0 ? strLength : false;
+	if(strLength) {
+		//Define all the possible character
+		var possibleCharacter = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		//start the string
+		var str = '';
+		for(var i=0;i<strLength;i++) {
+			//Get a random character from the possible character
+			var randomCharacter = possibleCharacter.charAt(Math.floor(Math.random()*possibleCharacter.length));
+			//Apppend this character with the final string
+			str += randomCharacter;
+		}
+
+		//Return the final string
+		return str;
+
+	} else {
+		return false;
 	}
 };
 

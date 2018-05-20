@@ -7,6 +7,7 @@
 //dependencies
 var fs = require('fs');
 var path  = require('path');
+var helpers = require('./helpers');
 
 // container module to exported
 var lib = {};
@@ -49,7 +50,14 @@ lib.create = function(dir,file,data,callback){
 //Read data from file
 lib.read = function(dir,file,callback){
 	fs.readFile(lib.baseDir+dir+'/'+file+'.json','utf-8',function(err,data){
-			callback(err,data);
+			if(!err && data) {
+				console.log("the data is " +data);
+				var parsedData = helpers.parseJsonToObject(JSON.stringify(data));
+				callback(err,JSON.parse(parsedData));
+			} else {
+				callback(err,data);	
+			}
+			
 	});
 };
 
@@ -69,7 +77,7 @@ lib.update = function(dir,file,data,callback){
 						if(!err) {
 							fs.close(fileDescriptor,function(err){
 								if(!err) {
-									callback("false");
+									callback(false);
 								} else {
 									callback("Error in closing the existing file");
 								}
@@ -83,10 +91,21 @@ lib.update = function(dir,file,data,callback){
 				}
 			});
 		} else {
-
+			console.log("Unable to open the file");
 		}
 	});
 };
 
+//delete the data
+lib.delete = function(dir,file,callback){
+	fs.unlink(lib.baseDir+dir+'/'+file+'.json',function(err){
+		if(!err) {
+			console.log("=========== In delete lib =============");
+			callback(false);
+		} else {
+			callback("Unable to delete the file");
+		}
+	});
+};
 //Export the module
 module.exports = lib;

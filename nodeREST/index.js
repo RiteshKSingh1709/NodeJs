@@ -29,11 +29,11 @@ var DEBUG=true;
 //Testing the create function
 if(!DEBUG){
 	_data.create('test','newfile',{'foo':'bar'},'json',function(err){
-		console.log("The error is : "+ err)
+		console.log("The error is : "+ err);
 	});
 }
 //Testing the read function
-if(DEBUG)
+if(!DEBUG)
 {
 	_data.read('test','newfile',function(err,data){	
 		if(!err) {
@@ -90,7 +90,7 @@ var unifiedServer = function(req,res){
 	var trimmedUrl = path.replace(/^\/+|\/+$/g,'');
 	//get the queryString in the requested path
 	var queryStringObject = parsedUrl.query;
-	console.log(queryStringObject);
+	console.log("query string"+queryStringObject.phone);
 	//get the methd which that request came to the server
 	var method = req.method.toLowerCase();
 	//get the header as object
@@ -120,8 +120,8 @@ var unifiedServer = function(req,res){
 			'method' : method,
 			'headers' : header,
 			'payload' : helpers.parseJsonToObject(buffer),
-		}
-		console.log("The data is :"+data.payload.firstName + "The typeof : " + typeof(data.payload.firstName));
+		};
+		console.log("The data is :"+data.queryStringObject.phone + "The typeof : " + typeof(data.queryStringObject));
 		// for(let Obj in data.payload){
 		// 	console.log("coming here");
 		// 	console.log(Obj + " : " + data.payload[Obj] + "typeof(object) : " + typeof(data.payload[Obj]));
@@ -130,7 +130,7 @@ var unifiedServer = function(req,res){
 		choosenHandler(data,function(statusCode,payload){
 			//use the status code called by handler or deault
 			var statusCode = typeof(statusCode) =='number' ? statusCode : 404;
-
+			console.log("The payload is :"+typeof(payload)+''+payload);
 			//use the payload called by handler or default
 			var payload = typeof(payload) == 'object' ? payload : {};
 
@@ -162,3 +162,4 @@ var router = {};
 router.sample = handlers.sample;
 router.ping = handlers.ping;
 router.users = handlers.users;
+router.tokens = handlers.tokens;
