@@ -103,6 +103,7 @@ lib.delete = function(dir,file,callback){
 			console.log("=========== In delete lib =============");
 			callback(false);
 		} else {
+			console.log(err);
 			callback("Unable to delete the file");
 		}
 	});
